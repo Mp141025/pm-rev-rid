@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    }
+    .emoji {
+      position: absolute;
+      font-size: 30px;
+      animation: float 8s infinite ease-in-out;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-50px) rotate(10deg); }
+    }
+    canvas {
+      display: block;
+    }
+    .text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: Arial, sans-serif;
+      color: #333;
+      text-align: center;
+      width: 80%;
+      font-size: 24px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div id="emojis"></div>
+  <div class="text" id="text"></div>
+
+  <script>
+    // ====== BACKGROUND SETUP ======
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resizeCanvas() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    function animateBackground() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 3; i++) {
+        ctx.moveTo(0, Math.random() * height);
+        ctx.bezierCurveTo(
+          width * 0.3, Math.random() * height,
+          width * 0.7, Math.random() * height,
+          width, Math.random() * height
+        );
+      }
+      ctx.stroke();
+      requestAnimationFrame(animateBackground);
+    }
+
+    function spawnEmojis() {
+      const container = document.getElementById('emojis');
+      container.innerHTML = '';
+      const emojis = ['🧪', '🔬', '🌱', '🧬', '⚗️', '🦠', '🧫', '🌡️', '🧠', '💉'];
+      for (let i = 0; i < 8; i++) {
+        const emoji = document.createElement('div');
+        emoji.className = 'emoji';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = `${Math.random() * 100}%`;
+        emoji.style.top = `${Math.random() * 100}%`;
+        emoji.style.animationDelay = `${Math.random() * 5}s`;
+        container.appendChild(emoji);
+      }
+    }
+
+    // ====== RIDDLE FEATURE ======           
+const riddles = [
+  { 
+    q: "पानी में जन्म, पानी में पाला, पानी में डूबा, तो जान गँवाला।", 
+    a: "नमक" 
+  },
+  { 
+    q: "बिना पंख के उड़ता फिरे, बिना मुँह के गाना गाए।", 
+    a: "प्रतिध्वनि / Echo" 
+  },
+  { 
+    q: "घर में रहता पराया, बिन बुलाये आ जाए। जब चाहो निकाल दो, जब न चाहो रहने दो।", 
+    a: "छाया" 
+  },
+  { 
+    q: "एक चीज़ ऐसी है भाई, खाली हो तो भारी, भरी हो तो हल्की।", 
+    a: "गुब्बारा" 
+  },
+  { 
+    q: "पीता नहीं, फिर भी मर जाता, हवा न मिले तो।", 
+    a: "मोमबत्ती" 
+  },
+  { 
+    q: "देखने में लाल, खाने में मीठा, अंदर से काला, बीज है छोटा।", 
+    a: "तरबूज" 
+  },
+  { 
+    q: "बिना धड़कन के जीता हूँ, बिना फेफड़ों के साँस लेता हूँ।", 
+    a: "पेड़-पौधे" 
+  },
+  { 
+    q: "चलता हूँ बिना पैर के, बताओ मैं कौन हूँ?", 
+    a: "घड़ी" 
+  },
+  { 
+    q: "एक है ऐसी चीज़, जो गर्मी में बढ़ती है, सर्दी में घटती है।", 
+    a: "पारा / Mercury in thermometer" 
+  },
+  { 
+    q: "न होते हुए भी दिखता, छूने से टूट जाता।", 
+    a: "परछाई" 
+  },
+  { 
+    q: "एक मंदिर है ऐसा, जिसमें देवता नहीं, फिर भी पूजा होती है।", 
+    a: "दंत मंदिर / दाँत" 
+  },
+  { 
+    q: "एक बूँद में डूब मरूँ, समुंदर में तैरता फिरूँ।", 
+    a: "नमक" 
+  },
+  { 
+    q: "हरी है पर सब्जी नहीं, पत्ते हैं पर पेड़ नहीं, फूल हैं पर गंध नहीं।", 
+    a: "पत्तागोभी" 
+  },
+  { 
+    q: "घर का नाम ऐसा, जिसमें रहते सभी, पर कोई नहीं रहता।", 
+    a: "पता / Address" 
+  },
+  { 
+    q: "चलती है बिना पैर के, काटती है बिना दाँत के।", 
+    a: "घड़ी" 
+  },
+  { 
+    q: "एक बेटी ऐसी, जो माँ से पहले पैदा होती है।", 
+    a: "अंडा" 
+  },
+  { 
+    q: "दिन में आँख खोलती है, रात में सो जाती है।", 
+    a: "कमल का फूल" 
+  },
+  { 
+    q: "एक छोटा सा जहाज, जिसमें बैठे हज़ार।", 
+    a: "अनार" 
+  },
+  { 
+    q: "हवा में उड़ता फिरे, पकड़ो तो मर जाए।", 
+    a: "धुआँ" 
+  },
+  { 
+    q: "एक मेहमान ऐसा, जो बिना बुलाए आता है, और बिना जाने चला जाता है।", 
+    a: "नींद" 
+  },
+  { 
+    q: "छोटा सा दीपक, जो पूरे घर को रोशन कर दे।", 
+    a: "बिजली का बल्ब" 
+  },
+  { 
+    q: "जिसके पास सब कुछ है, पर खुद के पास कुछ नहीं।", 
+    a: "बैंक" 
+  },
+  { 
+    q: "जितना खोदो उतना गहरा, फिर भी पानी नहीं आता।", 
+    a: "कुआँ" 
+  },
+  { 
+    q: "बिना हाथ-पैर के चलता, बिना मुँह के बोलता।", 
+    a: "पत्र / चिट्ठी" 
+  }
+];
+
+    const textDiv = document.getElementById('text');
+    let current = 0;
+
+    function typeText(element, text, delay = 100, callback) {
+      element.innerHTML = "";
+      let i = 0;
+      const interval = setInterval(() => {
+        element.innerHTML += text.charAt(i);
+        i++;
+        if (i >= text.length) {
+          clearInterval(interval);
+          if (callback) callback();
+        }
+      }, delay);
+    }
+
+    function showRiddle(index) {
+      const riddle = riddles[index];
+      textDiv.style.opacity = 1;
+      textDiv.innerHTML = "";
+
+      typeText(textDiv, riddle.q, 80, () => {
+        setTimeout(() => {
+          const answer = document.createElement("div");
+          answer.textContent = riddle.a;
+          answer.style.marginTop = "20px";
+          answer.style.opacity = 0;
+          answer.style.transition = "opacity 2s ease-in-out";
+          textDiv.appendChild(answer);
+
+          setTimeout(() => {
+            answer.style.opacity = 1;
+          }, 100);
+
+          setTimeout(() => {
+            current = (current + 1) % riddles.length;
+            showRiddle(current);
+          }, 10000); // Wait for final 10 seconds before next riddle
+        }, 20000); // Wait 20 seconds after typing before showing answer
+      });
+    }
+
+    // ====== INITIALIZATION ======
+    function init() {
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      animateBackground();
+      spawnEmojis();
+      showRiddle(current);
+    }
+
+    init();
+  </script>
+</body>
+</html>
